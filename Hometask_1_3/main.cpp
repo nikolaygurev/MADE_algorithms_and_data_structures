@@ -44,7 +44,7 @@ private:
     void narrow_down_stack();
 
 public:
-    explicit Stack();
+    Stack();
 
     ~Stack();
 
