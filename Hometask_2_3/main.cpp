@@ -63,7 +63,7 @@ private:
     void sift_down(int pos);
 
 public:
-    explicit MinHeap();
+    MinHeap();
 
     ~MinHeap();
 
