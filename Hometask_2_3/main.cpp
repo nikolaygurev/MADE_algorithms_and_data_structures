@@ -62,6 +62,9 @@ private:
 public:
     MinHeap();
 
+    // Конструктор от массива
+    MinHeap(const int *arr, int arr_size);
+
     ~MinHeap();
 
     bool empty() const;
@@ -79,6 +82,19 @@ public:
 
 MinHeap::MinHeap() : current_size(default_size), last(-1) {
     heap_ptr = new int[current_size];
+}
+
+// Амортизированное время работы: O(arr_size)
+MinHeap::MinHeap(const int *arr, int arr_size) : current_size(arr_size), last(current_size - 1) {
+    heap_ptr = new int[current_size];
+
+    for (int i = 0; i < current_size; i++) {
+        heap_ptr[i] = arr[i];
+    }
+
+    for (int i = current_size / 2 - 1; i >= 0; i--) {
+        sift_down(i);
+    }
 }
 
 MinHeap::~MinHeap() {
