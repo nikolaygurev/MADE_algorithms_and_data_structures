@@ -44,11 +44,8 @@ private:
     int *heap_ptr; // Указатель на начало выделенного буфера
     int last; // Номер последнего элемента кучи
 
-    // Выделить буфер в 2 раза больше
-    void extend_heap();
-
-    // Выделить буфер в 2 раза меньше
-    void narrow_down_heap();
+    // Выделить буфер в 2 раза больше, чем used_size
+    void resize_heap(int used_size);
 
     // Добавить элемент в конец кучи
     void push_back(int value);
@@ -88,12 +85,12 @@ MinHeap::~MinHeap() {
     delete[] heap_ptr;
 }
 
-void MinHeap::extend_heap() {
-    // Выделяем буфер в 2 раза больше
-    int *new_ptr = new int[current_size * 2];
+void MinHeap::resize_heap(int used_size) {
+    // Выделяем буфер в 2 раза больше, чем used_size
+    int *new_ptr = new int[used_size * 2];
 
     // Копируем элементы из старого буфера в новый
-    for (int i = 0; i < current_size; i++) {
+    for (int i = 0; i < used_size; i++) {
         new_ptr[i] = heap_ptr[i];
     }
 
@@ -101,30 +98,14 @@ void MinHeap::extend_heap() {
     delete[] heap_ptr;
 
     heap_ptr = new_ptr;
-    current_size *= 2;
-}
-
-void MinHeap::narrow_down_heap() {
-    // Выделяем буфер в 2 раза меньше
-    int *new_ptr = new int[current_size / 2];
-
-    // Копируем элементы из старого буфера в новый
-    for (int i = 0; i < current_size / 4; i++) {
-        new_ptr[i] = heap_ptr[i];
-    }
-
-    // Удаляем старый буфер
-    delete[] heap_ptr;
-
-    heap_ptr = new_ptr;
-    current_size /= 2;
+    current_size = used_size * 2;
 }
 
 // Амортизированное время работы: O(1)
 void MinHeap::push_back(int value) {
     // Расширяем буфер в 2 раза, если в нём закончилось место
     if (last == current_size - 1) {
-        extend_heap();
+        resize_heap(current_size);
     }
     heap_ptr[++last] = value;
 }
@@ -137,7 +118,7 @@ int MinHeap::pop_front() {
     // Сужаем буфер в 2 раза, если в нём занято <= 25%, и
     // новый буфер будет не меньше размера по умолчанию (20)
     if ((last < current_size / 4) && (current_size >= default_size * 2)) {
-        narrow_down_heap();
+        resize_heap(current_size / 4);
     }
 
     return result;
