@@ -33,13 +33,15 @@ using std::swap;
 using std::vector;
 
 
+std::random_device rd;
+std::mt19937 generator(rd());
+
+
 int get_random_array_index(int size) {
     // Возвращает случайное число из диапазона: [0; size)
-    std::random_device rd;
-    std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, size - 1);
 
-    return dis(gen);
+    return dis(generator);
 }
 
 
@@ -165,24 +167,19 @@ int FindOrderStatDefault(int *array, int size, int k) {
 void Test() {
     const int SIZES[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 50, 100, 200};
     const int N_ITER = pow(10, 4);
-
-    std::random_device rd_values;
-    std::mt19937 gen_values(rd_values());
-    std::uniform_int_distribution<> dis_values(0, pow(10, 9));
+    std::uniform_int_distribution<> test_values_dist(0, pow(10, 9));
 
     // Для каждой длины входного массива из SIZES
     for (int i = 0; i < sizeof(SIZES) / sizeof(SIZES[0]); i++) {
         const int SIZE = SIZES[i];
         cout << "Test for size: " << SIZE;
 
-        std::random_device rd_k;
-        std::mt19937 gen_k(rd_k());
-        std::uniform_int_distribution<> dis_k(0, SIZE - 1);
+        std::uniform_int_distribution<> test_k_dist(0, SIZE - 1);
 
         // N_ITER раз повторяем
         for (int j = 0; j < N_ITER; j++) {
             // Создаём случайное k
-            int k = dis_k(gen_k);
+            int k = test_k_dist(generator);
 
             // Создаём 3 одинаковых случайных вектора размера SIZE
             int value = 0;
@@ -190,7 +187,7 @@ void Test() {
             vector<int> values1 = {};
             vector<int> values2 = {};
             for (int h = 0; h < SIZE; h++) {
-                value = dis_values(gen_values);
+                value = test_values_dist(generator);
                 values0.push_back(value);
                 values1.push_back(value);
                 values2.push_back(value);
