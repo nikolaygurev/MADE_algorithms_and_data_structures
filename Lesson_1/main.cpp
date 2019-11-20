@@ -2,6 +2,10 @@
 #include <iostream>
 
 
+using std::cin;
+using std::cout;
+
+
 // Узел односвязного списка
 struct QueueNode {
     int value;
@@ -9,6 +13,7 @@ struct QueueNode {
 
     QueueNode(int val, QueueNode *ptr) : value(val), next(ptr) {}
 };
+
 
 class Queue {
 private:
@@ -20,14 +25,15 @@ public:
     ~Queue();
 
     // Проверка очереди на пустоту
-    bool empty() const;
+    bool Empty() const;
 
     // Добавление элемента
-    void push(int value);
+    void Push(int value);
 
     // Извелечение
-    int pop();
+    int Pop();
 };
+
 
 Queue::~Queue() {
     while (head) {
@@ -42,14 +48,16 @@ Queue::~Queue() {
     }
 }
 
-bool Queue::empty() const {
+
+bool Queue::Empty() const {
     assert((head == nullptr) == (tail == nullptr));
 
     return head == nullptr;
 }
 
-void Queue::push(int value) {
-    if (empty()) {
+
+void Queue::Push(int value) {
+    if (Empty()) {
         head = tail = new QueueNode{value, nullptr};
     } else {
         tail->next = new QueueNode{value, nullptr};
@@ -57,8 +65,9 @@ void Queue::push(int value) {
     }
 }
 
-int Queue::pop() {
-    assert(!empty());
+
+int Queue::Pop() {
+    assert(!Empty());
     int result = head->value;
 
     if (head == tail) {
@@ -74,31 +83,32 @@ int Queue::pop() {
     return result;
 }
 
+
 int main() {
-    int commands_count = 0;
-    std::cin >> commands_count;
+    int n = 0;
+    cin >> n;
 
     Queue queue;
-    for (int i = 0; i < commands_count; ++i) {
+    for (int i = 0; i < n; ++i) {
         int command = 0;
         int value = 0;
-        std::cin >> command >> value;
+        cin >> command >> value;
 
         if (command == 3) {
-            queue.push(value);
+            queue.Push(value);
         } else if (command == 2) {
-            if (queue.empty()) {
+            if (queue.Empty()) {
                 if (value != -1) {
-                    std::cout << "NO";
+                    cout << "NO";
                     return 0;
                 }
-            } else if (queue.pop() != value) {
-                std::cout << "NO";
+            } else if (queue.Pop() != value) {
+                cout << "NO";
                 return 0;
             }
         }
     }
+    cout << "YES";
 
-    std::cout << "YES";
     return 0;
 }

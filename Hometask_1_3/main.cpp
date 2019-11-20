@@ -1,19 +1,20 @@
-// Во всех задачах из следующего списка следует написать структуру данных, обрабатывающую команды push* и pop*.
+// Во всех задачах из следующего списка следует написать структуру данных,
+// обрабатывающую команды Push* и Pop*.
 //
 // Формат входных данных.
-// В первой строке количество команд n. n ≤ 1000000.
-// Каждая команда задаётся как 2 целых числа: a b.
-// a = 1 - push front
-// a = 2 - pop front
-// a = 3 - push back
-// a = 4 - pop back
-// Для очереди используются команды 2 и 3. Для дека используются все четыре команды.
-// Если дана команда pop*, то число b - ожидаемое значение.
-// Если команда pop* вызвана для пустой структуры данных, то ожидается “-1”.
+// В первой строке количество команд n, n <= 1000000. Каждая команда задаётся,
+// как 2 целых числа: a b.
+// a = 1 - Push front
+// a = 2 - Pop front
+// a = 3 - Push back
+// a = 4 - Pop back
+// Для очереди используются команды 2 и 3. Для дека используются все четыре
+// команды. Если дана команда Pop*, то число b - ожидаемое значение. Если
+// команда Pop* вызвана для пустой структуры данных, то ожидается “-1”.
 //
 // Формат выходных данных.
-// Требуется напечатать YES - если все ожидаемые значения совпали.
-// Иначе, если хотя бы одно ожидание не оправдалось, то напечатать NO
+// Требуется напечатать YES, если все ожидаемые значения совпали. Иначе, если
+// хотя бы одно ожидание не оправдалось, нужно напечатать NO.
 //
 // №1_3. Реализовать очередь с помощью двух стеков.
 // Использовать стек, реализованный с помощью динамического буфера.
@@ -25,6 +26,7 @@
 
 #include <cassert>
 #include <iostream>
+
 
 using std::cin;
 using std::cout;
@@ -38,29 +40,32 @@ private:
     int head; // Номер верхнего элемента
 
     // Выделить буфер в 2 раза больше, чем used_size
-    void resize_stack(int used_size);
+    void ResizeStack(int used_size);
 
 public:
     Stack();
 
     ~Stack();
 
-    bool empty() const;
+    bool Empty() const;
 
-    void push(int value);
+    void Push(int value);
 
-    int pop();
+    int Pop();
 };
+
 
 Stack::Stack() : current_size(default_size), head(-1) {
     stack_ptr = new int[current_size];
 }
 
+
 Stack::~Stack() {
     delete[] stack_ptr;
 }
 
-void Stack::resize_stack(int used_size) {
+
+void Stack::ResizeStack(int used_size) {
     // Выделяем буфер в 2 раза больше, чем used_size
     int *new_ptr = new int[used_size * 2];
 
@@ -76,28 +81,31 @@ void Stack::resize_stack(int used_size) {
     current_size = used_size * 2;
 }
 
+
 // Время работы: O(1)
-bool Stack::empty() const {
+bool Stack::Empty() const {
     return (head == -1);
 }
 
+
 // Амортизированное время работы: O(1)
-void Stack::push(int value) {
+void Stack::Push(int value) {
     // Расширяем буфер в 2 раза, если в нём закончилось место
     if (head == current_size - 1) {
-        resize_stack(current_size);
+        ResizeStack(current_size);
     }
     stack_ptr[++head] = value;
 }
 
+
 // Амортизированное время работы: O(1)
-int Stack::pop() {
+int Stack::Pop() {
     int result = stack_ptr[head--];
 
     // Сужаем буфер в 2 раза, если в нём занято <= 25%, и
     // новый буфер будет не меньше размера по умолчанию (20)
     if ((head < current_size / 4) && (current_size >= default_size * 2)) {
-        resize_stack(current_size / 4);
+        ResizeStack(current_size / 4);
     }
 
     return result;
@@ -112,43 +120,48 @@ private:
 public:
     Queue() : left_stack(), right_stack() {}
 
-    bool empty() const;
+    bool Empty() const;
 
-    void push(int value);
+    void Push(int value);
 
-    int pop();
+    int Pop();
 };
 
+
 // Время работы: O(1)
-bool Queue::empty() const {
-    return (left_stack.empty() && right_stack.empty());
+bool Queue::Empty() const {
+    return (left_stack.Empty() && right_stack.Empty());
 }
 
+
 // Амортизированное время работы: O(1)
-void Queue::push(int value) {
-    left_stack.push(value);
+void Queue::Push(int value) {
+    left_stack.Push(value);
 }
 
-// Амортизированное время работы: O(1)
-int Queue::pop() {
-    assert(!empty());
 
-    // Если в правом стеке нет элементов, переложим все элементы из левого стека в правый
-    if (right_stack.empty()) {
-        while (!left_stack.empty()) {
-            right_stack.push(left_stack.pop());
+// Амортизированное время работы: O(1)
+int Queue::Pop() {
+    assert(!Empty());
+
+    // Если в правом стеке нет элементов,
+    // переложим все элементы из левого стека в правый
+    if (right_stack.Empty()) {
+        while (!left_stack.Empty()) {
+            right_stack.Push(left_stack.Pop());
         }
     }
 
-    return right_stack.pop();
+    return right_stack.Pop();
 }
 
+
 int main() {
-    int n_commands = 0;
-    cin >> n_commands;
+    int n = 0;
+    cin >> n;
 
     Queue queue;
-    for (int i = 0; i < n_commands; ++i) {
+    for (int i = 0; i < n; ++i) {
         int command = 0;
         int value = 0;
         cin >> command >> value;
@@ -156,25 +169,25 @@ int main() {
 
         switch (command) {
             case 2:
-                if (queue.empty()) {
+                if (queue.Empty()) {
                     if (value != -1) {
                         cout << "NO";
                         return 0;
                     }
-                } else if (queue.pop() != value) {
+                } else if (queue.Pop() != value) {
                     cout << "NO";
                     return 0;
                 }
                 break;
             case 3:
-                queue.push(value);
+                queue.Push(value);
                 break;
             default:
                 cout << "NO";
                 return 0;
         }
     }
-
     cout << "YES";
+
     return 0;
 }
