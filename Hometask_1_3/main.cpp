@@ -37,11 +37,8 @@ private:
     int *stack_ptr; // Указатель на начало выделенного буфера
     int head; // Номер верхнего элемента
 
-    // Выделить буфер в 2 раза больше
-    void extend_stack();
-
-    // Выделить буфер в 2 раза меньше
-    void narrow_down_stack();
+    // Выделить буфер в 2 раза больше, чем used_size
+    void resize_stack(int used_size);
 
 public:
     Stack();
@@ -63,12 +60,12 @@ Stack::~Stack() {
     delete[] stack_ptr;
 }
 
-void Stack::extend_stack() {
-    // Выделяем буфер в 2 раза больше
-    int *new_ptr = new int[current_size * 2];
+void Stack::resize_stack(int used_size) {
+    // Выделяем буфер в 2 раза больше, чем used_size
+    int *new_ptr = new int[used_size * 2];
 
     // Копируем элементы из старого буфера в новый
-    for (int i = 0; i < current_size; i++) {
+    for (int i = 0; i < used_size; i++) {
         new_ptr[i] = stack_ptr[i];
     }
 
@@ -76,23 +73,7 @@ void Stack::extend_stack() {
     delete[] stack_ptr;
 
     stack_ptr = new_ptr;
-    current_size *= 2;
-}
-
-void Stack::narrow_down_stack() {
-    // Выделяем буфер в 2 раза меньше
-    int *new_ptr = new int[current_size / 2];
-
-    // Копируем элементы из старого буфера в новый
-    for (int i = 0; i < current_size / 4; i++) {
-        new_ptr[i] = stack_ptr[i];
-    }
-
-    // Удаляем старый буфер
-    delete[] stack_ptr;
-
-    stack_ptr = new_ptr;
-    current_size /= 2;
+    current_size = used_size * 2;
 }
 
 // Время работы: O(1)
@@ -104,7 +85,7 @@ bool Stack::empty() const {
 void Stack::push(int value) {
     // Расширяем буфер в 2 раза, если в нём закончилось место
     if (head == current_size - 1) {
-        extend_stack();
+        resize_stack(current_size);
     }
     stack_ptr[++head] = value;
 }
@@ -116,7 +97,7 @@ int Stack::pop() {
     // Сужаем буфер в 2 раза, если в нём занято <= 25%, и
     // новый буфер будет не меньше размера по умолчанию (20)
     if ((head < current_size / 4) && (current_size >= default_size * 2)) {
-        narrow_down_stack();
+        resize_stack(current_size / 4);
     }
 
     return result;
