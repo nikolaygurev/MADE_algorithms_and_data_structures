@@ -71,7 +71,7 @@ int64_t MergeSortIterativeWithInvCount(int *array, int size) {
     // j - левая граница двух объединяемых подмассивов
     for (int i = 1; i < size; i *= 2) {
         for (int j = 0; j < size - i; j += 2 * i) {
-            int right = (j + 2 * i <= size) ? j + 2 * i : size;
+            const int right = (j + 2 * i <= size) ? j + 2 * i : size;
             n_inversions += MergeWithInvCount(array, j, j + i, right);
         }
     }
