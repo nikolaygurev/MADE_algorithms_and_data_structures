@@ -19,6 +19,7 @@ class Queue {
 private:
     QueueNode *head;
     QueueNode *tail;
+
 public:
     Queue() : head(nullptr), tail(nullptr) {}
 
