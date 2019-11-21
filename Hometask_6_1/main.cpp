@@ -1,14 +1,14 @@
-// Дано число N < 10^6 и последовательность целых чисел из [-2^31..2^31]
-// длиной N. Требуется построить бинарное дерево, заданное наивным порядком
-// вставки. Т.е., при добавлении очередного числа K в дерево с корнем root,
-// если root->Key <= K, то узел K добавляется в правое поддерево root;
-// иначе - в левое поддерево root. Рекурсия запрещена.
+// Дано число n < 10^6 и последовательность целых чисел из [-2^31...2^31] длиной
+// n. Требуется построить бинарное дерево, заданное наивным порядком вставки.
+// Т.е., при добавлении очередного числа K в дерево с корнем root, если
+// root->Key <= K, то узел K добавляется в правое поддерево root; иначе - в
+// левое поддерево root. Рекурсия запрещена.
 //
 // 6_1. Выведите элементы в порядке pre-order (сверху вниз).
 
 
-// Время работы: O(N * log(N))
-// Потребляемая память: O(N)
+// Время работы: O(n * log(n))
+// Потребляемая память: O(n)
 
 
 #include <iostream>
@@ -28,6 +28,7 @@ struct TreeNode {
     explicit TreeNode(int _value) : left(nullptr), right(nullptr),
                                     value(_value) {}
 };
+
 
 class Tree {
 private:
@@ -62,6 +63,7 @@ Tree::~Tree() {
 // Время работы: O(n)
 void Tree::PostOrderDestructorRecursive(TreeNode *node) {
     if (!node) return;
+
     PostOrderDestructorRecursive(node->left);
     PostOrderDestructorRecursive(node->right);
     delete node;
@@ -132,6 +134,7 @@ void Tree::PreOrderTraversalIterative(TreeNode *node) {
 void Tree::Add(int value) {
     if (!root) {
         root = new TreeNode(value);
+
         return;
     }
 
@@ -157,12 +160,12 @@ void Tree::Add(int value) {
 
 
 int main() {
-    int N = 0;
-    cin >> N;
+    int n = 0;
+    cin >> n;
 
     Tree tree;
     int value = 0;
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < n; i++) {
         cin >> value;
         tree.Add(value);
     }
