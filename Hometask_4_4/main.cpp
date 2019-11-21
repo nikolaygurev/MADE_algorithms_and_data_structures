@@ -5,15 +5,15 @@
 //
 // Требования к дополнительной памяти: O(n).
 // Требуемое среднее время работы: O(n).
-// Функцию Partition следует реализовать методом прохода двумя итераторами
-// в одном направлении.
+// Функцию Partition следует реализовать методом прохода двумя итераторами в
+// одном направлении.
 //
 // №4_3. Реализуйте стратегию выбора опорного элемента “случайный элемент”.
 // Функцию Partition реализуйте методом прохода двумя итераторами от конца
 // массива к началу.
 
 
-// Амортизированное время работы: O(n)
+// Среднее время работы: O(n)
 // Потребляемая память: O(n)
 
 
@@ -37,7 +37,7 @@ std::random_device rd;
 std::mt19937 generator(rd());
 
 
-int get_random_array_index(int size) {
+int GetRandomArrayIndex(int size) {
     // Возвращает случайное число из диапазона: [0; size)
     std::uniform_int_distribution<> dis(0, size - 1);
 
@@ -54,7 +54,7 @@ int PartitionForward(int *array, int left, int right) {
 
     array = array + left;
     int size = right - left;
-    int pivot = get_random_array_index(size);
+    int pivot = GetRandomArrayIndex(size);
     swap(array[pivot], array[size - 1]);
 
     int i = 0, j = 0;
@@ -86,7 +86,7 @@ int PartitionBackward(int *array, int left, int right) {
 
     array = array + left;
     int size = right - left;
-    int pivot = get_random_array_index(size);
+    int pivot = GetRandomArrayIndex(size);
     swap(array[pivot], array[0]);
 
     int i = size - 1, j = size - 1;
@@ -109,7 +109,7 @@ int PartitionBackward(int *array, int left, int right) {
 }
 
 
-// Амортизированное время работы: O(size)
+// Среднее время работы: O(size)
 int FindOrderStatRecursive(int *array, int size, int k) {
     assert(0 <= k && k < size);
 
@@ -132,7 +132,7 @@ int FindOrderStatRecursive(int *array, int size, int k) {
 }
 
 
-// Амортизированное время работы: O(size)
+// Среднее время работы: O(size)
 int FindOrderStatIterative(int *array, int size, int k) {
     assert(0 <= k && k < size);
 
@@ -170,7 +170,7 @@ void Test() {
     std::uniform_int_distribution<> test_values_dist(0, pow(10, 9));
 
     // Для каждой длины входного массива из SIZES
-    for (int i = 0; i < sizeof(SIZES) / sizeof(SIZES[0]); i++) {
+    for (unsigned long i = 0; i < sizeof(SIZES) / sizeof(SIZES[0]); i++) {
         const int SIZE = SIZES[i];
         cout << "Test for size: " << SIZE;
 
