@@ -76,7 +76,7 @@ private:
     void Rehash();
 
 public:
-    explicit HashTable(size_t initial_size, int random_value_);
+    HashTable(size_t initial_size, int random_value_);
 
     // Констурктор копирования
     HashTable(const HashTable &) = delete;
@@ -132,10 +132,8 @@ void HashTable::Rehash() {
     auto old_deleted = move(deleted);
 
     // Создаем новые вектора в 2 раза больше
-    vector<string> new_table(old_table.size() * 2, "");
-    vector<bool> new_deleted(old_table.size() * 2, false);
-    table = move(new_table);
-    deleted = move(new_deleted);
+    table.assign(old_table.size() * 2, "");
+    deleted.assign(old_table.size() * 2, false);
 
     // Обнуляем количество хранимых элементов
     current_size = 0;
