@@ -1,4 +1,4 @@
-// Задача 8. Хэш таблица. (10 баллов)
+// Задача № 8. Хэш таблица. (10 баллов)
 //
 // Реализуйте структуру данных типа "множество строк" на основе динамической
 // хэш-таблицы с открытой адресацией. Хранимые строки непустые и состоят из
@@ -13,7 +13,7 @@
 // множеству.
 //
 // № 8_1. Для разрешения коллизий используйте квадратичное пробирование. i-ая
-// проба: g(k, i) = (g(k, i - 1) + i) mod m, где m - степень двойки.
+// проба: g(k, i) = ((g(k, i - 1) + i) mod m), где m - степень двойки.
 //
 // Формат входных данных:
 // Каждая строка входных данных задает одну операцию над множеством. Запись
@@ -40,8 +40,8 @@
 // удален. "FAIL" иначе.
 
 
-// Время работы: O(n)
-// Потребляемая память: O(n)
+// Время работы: O(n), где n - количество операций со множеством
+// Потребляемая память: O(n), где n - количество операций со множеством
 
 
 #include <cassert>
@@ -67,6 +67,7 @@ private:
 
     vector<string> table;
     const int random_value;
+    const float max_fill_coef;
     double current_size = 0;
 
     size_t GetBaseHash(const string &key) const;
@@ -101,10 +102,11 @@ public:
 HashTable::HashTable(size_t initial_size, int random_value_)
         : table(initial_size, ""),
           deleted(initial_size, false),
-          random_value(random_value_) {}
+          random_value(random_value_),
+          max_fill_coef(0.75) {}
 
 
-// Среднее время работы: O(1) (для длинных ключей: O(key.size()))
+// Время работы: O(key.size()) (для коротких key считаем, что O(1))
 size_t HashTable::GetBaseHash(const string &key) const {
     assert(!key.empty());
     size_t hash = 0;
@@ -125,7 +127,7 @@ size_t HashTable::GetNewHash(size_t current_hash, size_t current_iter) const {
 }
 
 
-// Время работы: O(n)
+// Время работы: O(table.size())
 void HashTable::Rehash() {
     // Сохраняем старые значения векторов
     auto old_table = move(table);
@@ -196,7 +198,7 @@ bool HashTable::Add(const string &key) {
             deleted[pos_for_insert] = false;
             current_size++;
 
-            if (current_size / table.size() >= 0.75) {
+            if (current_size / table.size() >= max_fill_coef) {
                 Rehash();
             }
             return true;
@@ -252,7 +254,7 @@ bool HashTable::Remove(const string &key) {
 int main() {
     HashTable table(8, 5);
     char command = ' ';
-    string value = " ";
+    string value;
 
     while (cin >> command >> value) {
         switch (command) {
