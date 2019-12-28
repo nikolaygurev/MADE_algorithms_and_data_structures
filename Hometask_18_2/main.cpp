@@ -64,7 +64,7 @@ void SearchForConvexHull(const vector<Point> &points,
                          vector<Point> &hull_points) {
     assert(points.size() >= 2);
 
-    // Ищем стартовую точку - самую правую среди самых нижних
+    // Поиск стартовой точки - самой правой среди самых нижних
     int start_i = 0;
     for (int i = 1; i < points.size(); i++) {
         if ((points[i].y < points[start_i].y) ||
@@ -81,7 +81,7 @@ void SearchForConvexHull(const vector<Point> &points,
         // Гарантированно отличается от cur
         int best = (cur + 1) % static_cast<int>(points.size());
 
-        // Перебираем все точки и ищем наилучшую
+        // Перебор всех точек и поиск наилучшей
         for (int i = 0; i < points.size(); i++) {
             double cross_product = CrossProduct(points[cur], points[best],
                                                 points[cur], points[i]);
@@ -95,8 +95,8 @@ void SearchForConvexHull(const vector<Point> &points,
                 // Векторное произведение [cur_best, cur_i] равно нулю => угол
                 // вращения против часовой стрелки от cur_best к cur_i равен
                 // нулю (не 180 градусов, т.к. в случае нескольких точек на
-                // одной прямой мы всегда находимся в крайней) => оболочкой
-                // является более длинный вектор
+                // одной прямой текущей точкой всегда является крайняя) =>
+                // оболочкой является более длинный вектор
                 double dist_best = DistBetween(points[cur], points[best]);
                 double dist_i = DistBetween(points[cur], points[i]);
 
@@ -112,7 +112,7 @@ void SearchForConvexHull(const vector<Point> &points,
 
 // Время работы: O(hull_points.size())
 double Perimeter(vector<Point> hull_points) {
-    // Добавляем стартовую точку в конец для того, чтобы замкнуть оболочку
+    // Добавление стартовой точки в конец для того, чтобы замкнуть оболочку
     hull_points.push_back(hull_points[0]);
     double perimeter = 0;
 
